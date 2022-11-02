@@ -14,5 +14,6 @@ A ticketing application implemented using a microservices based architecture
 
 ## Observed issues:
 - `ts-node-dev` can have issues if the resources specified in the deployment file
-  are too restrictive. Using the `--poll` flag with with `ts-node-dev` may also help in some cases. It is also recommended
-  to use the `node:lts-alpine` base image
+  are too restrictive. Using the `--poll` flag with with `ts-node-dev` may help in cases where code hot-reload is not occuring. 
+  It is also recommended to use the `node:lts-alpine` base image
+- If using yaml-schema, ensure that the matching apiVersion is selected for `skaffold.yaml`
