@@ -12,7 +12,10 @@ A ticketing application implemented using a microservices based architecture
 - Handling concurrency issues
 - Central library as an NPM module for shared code 
 
-## Observed issues:
+## Quickstart
+On Mac, make sure that Docker Desktop & Kubernetes are running. Run `skaffold dev` in the root project folder to run the pipeline in development mode.
+
+## Notes:
 - `ts-node-dev` can have issues if the resources specified in the deployment file
   are too restrictive. Using the `--poll` flag with with `ts-node-dev` may help in cases where code hot-reload is not occuring. 
   It is also recommended to use the `node:lts-alpine` base image
