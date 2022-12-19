@@ -2,8 +2,7 @@ import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
 
-import { BadRequestError } from "../errors/BadRequestError";
-import { validateRequest } from "../middlewares/validateRequest";
+import { BadRequestError, validateRequest } from "@nsth/common";
 import { User } from "../models/User";
 import { PasswordManager } from "../services/PasswordManager";
 
