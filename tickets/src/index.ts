@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { app } from "./app";
+import { natsWrapper } from "./NatsWrapper";
 
 const startUp = async () => {
     // check env variables
@@ -11,6 +12,20 @@ const startUp = async () => {
     }
 
     try {
+        await natsWrapper.connect('http://nats-srv:4222');
+        const closeConn = async () => {
+            console.log('Closing client');
+            natsWrapper.natsConn && await natsWrapper.natsConn.close();
+            const err = natsWrapper.natsConn && await natsWrapper.natsConn.closed();
+            if (err) {
+                console.log(`Error closing: ${err}`);
+            }
+            process.exit();
+        }
+
+        process.on('SIGINT', async () => await closeConn());
+        process.on('SIGTERM', async () => await closeConn());
+
         await mongoose.connect(process.env.MONGO_URI);
         console.log('Connected to mongoDB')
     } catch (error) {
