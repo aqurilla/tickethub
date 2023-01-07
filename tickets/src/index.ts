@@ -10,9 +10,12 @@ const startUp = async () => {
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI must be defined');
     }
+    if (!process.env.NATS_URL) {
+        throw new Error('NATS_URL must be defined');
+    }
 
     try {
-        await natsWrapper.connect('http://nats-srv:4222');
+        await natsWrapper.connect(process.env.NATS_URL);
         const closeConn = async () => {
             console.log('Closing client');
             natsWrapper.natsConn && await natsWrapper.natsConn.close();
