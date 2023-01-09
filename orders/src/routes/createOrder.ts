@@ -4,6 +4,8 @@ import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import { Ticket } from '../models/Ticket';
 import { Order } from '../models/Order';
+import { OrderCreatedPublisher } from '../events/publishers/OrderCreatedPublisher';
+import { natsWrapper } from '../NatsWrapper';
 
 const EXPIRATION_WINDOW_SEC = 15 * 60;
 
@@ -46,7 +48,17 @@ router.post('/api/orders',
         })
         await order.save();
 
-        // publish order creation event
+        // publish an order creation event
+        await new OrderCreatedPublisher(natsWrapper.client).publish({
+            id: order.id,
+            status: order.status,
+            userId: order.userId,
+            expiresAt: order.expiresAt.toISOString(),
+            ticket: {
+                id: ticket.id,
+                price: ticket.price
+            }
+        });
 
         res.status(201).send(order);
     })
