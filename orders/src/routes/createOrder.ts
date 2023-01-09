@@ -1,7 +1,11 @@
 import express, { Request, Response } from 'express';
-import { requireAuth, validateRequest } from '@nsth/common';
+import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest } from '@nsth/common';
 import { body } from 'express-validator';
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
+import { Ticket } from '../models/Ticket';
+import { Order } from '../models/Order';
+
+const EXPIRATION_WINDOW_SEC = 15 * 60;
 
 const router = express.Router();
 
@@ -16,8 +20,35 @@ router.post('/api/orders',
     ],
     validateRequest,
     async (req: Request, res: Response) => {
+        const { ticketId } = req.body;
 
-        res.send({});
+        const ticket = await Ticket.findById(ticketId);
+        if (!ticket) {
+            throw new NotFoundError();
+        }
+
+        // check if already reserved
+        const isReserved = await ticket.isReserved();
+        if (isReserved) {
+            throw new BadRequestError('This ticket is already reserved');
+        }
+
+        // calculate expiration
+        const expiration = new Date();
+        expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SEC);
+
+        // build the order & save to DB
+        const order = Order.build({
+            userId: req.currentUser!.id,
+            status: OrderStatus.Created,
+            expiresAt: expiration,
+            ticket: ticket
+        })
+        await order.save();
+
+        // publish order creation event
+
+        res.status(201).send(order);
     })
 
 export { router as createOrderRouter };
