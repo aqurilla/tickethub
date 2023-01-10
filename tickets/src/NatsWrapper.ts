@@ -29,7 +29,13 @@ class NatsWrapper {
                 name: 'ticket',
                 subjects: ['ticket.*'],
                 storage: StorageType.Memory
-            })
+            });
+
+            await jetStreamManager.streams.add({
+                name: 'order',
+                subjects: ['order.*'],
+                storage: StorageType.Memory
+            });
 
             this._client = this._natsConn.jetstream();
         } catch (error) {
