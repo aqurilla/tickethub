@@ -4,6 +4,8 @@ import { TicketCreatedListener } from "./events/listeners/TicketCreatedListener"
 import { TicketUpdatedListener } from "./events/listeners/TicketUpdatedListener";
 import { natsWrapper } from "./NatsWrapper";
 
+mongoose.set('strictQuery', true);
+
 const startUp = async () => {
     // check env variables
     if (!process.env.JWT_KEY) {

@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { app } from "./app";
 import { natsWrapper } from "./NatsWrapper";
 
+mongoose.set('strictQuery', true);
+
 const startUp = async () => {
     // check env variables
     if (!process.env.JWT_KEY) {
