@@ -20,6 +20,15 @@ it('acks the message', async () => {
     expect(msg.ack).toHaveBeenCalled();
 })
 
+it('does not call ack for incorrect version event', async () => {
+    const { listener, data, ticket, msg } = await setup();
+    data.version += 50;
+    try {
+        await listener.onMessage(data, msg);
+    } catch (error) { }
+    expect(msg.ack).not.toHaveBeenCalled();
+})
+
 const setup = async () => {
     const listener = new TicketUpdatedListener(natsWrapper.client);
 
