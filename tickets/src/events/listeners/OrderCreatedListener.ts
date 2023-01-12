@@ -1,6 +1,7 @@
-import { Listener, OrderCreatedEvent, OrderStatus, Subjects } from "@nsth/common";
+import { Listener, OrderCreatedEvent, Subjects } from "@nsth/common";
 import { JsMsg } from "nats";
 import { Ticket } from "../../models/Ticket";
+import { TicketUpdatedPublisher } from "../publishers/TicketUpdatedPublisher";
 import { queueGroupName } from "./queueGroupName";
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
@@ -19,6 +20,16 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
             orderId: data.id
         })
         await ticket.save();
+
+        // publish event
+        await new TicketUpdatedPublisher(this.client).publish({
+            id: ticket.id,
+            version: ticket.version,
+            title: ticket.title,
+            price: ticket.price,
+            userId: ticket.userId,
+            orderId: ticket.orderId
+        });
 
         msg.ack();
     }
