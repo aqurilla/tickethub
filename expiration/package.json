@@ -18,7 +18,7 @@
   "author": "N. Suresh",
   "license": "ISC",
   "dependencies": {
-    "@nsth/common": "1.0.8",
+    "@nsth/common": "1.0.9",
     "@types/bull": "^4.10.0",
     "bull": "^4.10.2",
     "nats": "^2.10.2",
