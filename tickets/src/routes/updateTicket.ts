@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { body } from 'express-validator';
-import { validateRequest, NotFoundError, requireAuth, UnauthorizedError } from "@nsth/common";
+import { validateRequest, NotFoundError, requireAuth, UnauthorizedError, BadRequestError } from "@nsth/common";
 import { Ticket } from "../models/Ticket";
 import { TicketUpdatedPublisher } from "../events/publishers/TicketUpdatedPublisher";
 import { natsWrapper } from "../NatsWrapper";
@@ -24,6 +24,10 @@ router.put('/api/tickets/:id',
 
         if (ticket.userId !== req.currentUser!.id) {
             throw new UnauthorizedError();
+        }
+
+        if (ticket.orderId) {
+            throw new BadRequestError('Ticket already reserved');
         }
 
         ticket.set({
