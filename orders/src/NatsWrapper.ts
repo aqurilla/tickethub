@@ -38,6 +38,12 @@ class NatsWrapper {
                 storage: StorageType.Memory
             });
 
+            await jetStreamManager.streams.add({
+                name: 'expiration',
+                subjects: ['expiration.*'],
+                storage: StorageType.Memory
+            });
+
             this._client = this._natsConn.jetstream();
         } catch (error) {
             console.error(`Error connecting: ${error}`);
