@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { app } from "./app";
+import { OrderCancelledListener } from "./events/listeners/OrderCancelledListener";
+import { OrderCreatedListener } from "./events/listeners/OrderCreatedListener";
 import { natsWrapper } from "./NatsWrapper";
 
 mongoose.set('strictQuery', true);
@@ -32,7 +34,10 @@ const startUp = async () => {
         process.on('SIGTERM', async () => await closeConn());
 
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('Connected to mongoDB')
+        console.log('Connected to mongoDB');
+
+        new OrderCancelledListener(natsWrapper.client).listen();
+        new OrderCreatedListener(natsWrapper.client).listen();
     } catch (error) {
         console.error(error)
     }

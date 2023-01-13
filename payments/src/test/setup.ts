@@ -6,7 +6,7 @@ declare global {
     var getAuthCookie: () => string[];
 }
 
-jest.mock('tickets/src/NatsWrapper.ts');
+jest.mock('payments/src/NatsWrapper.ts');
 
 let mongo: any;
 beforeAll(async () => {
