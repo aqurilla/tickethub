@@ -26,8 +26,8 @@ class NatsWrapper {
             // create the stream
             const jetStreamManager = await this._natsConn.jetstreamManager();
             await jetStreamManager.streams.add({
-                name: 'charge',
-                subjects: ['charge.*'],
+                name: 'payment',
+                subjects: ['payment.*'],
                 storage: StorageType.Memory
             });
 
