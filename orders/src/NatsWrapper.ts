@@ -44,6 +44,12 @@ class NatsWrapper {
                 storage: StorageType.Memory
             });
 
+            await jetStreamManager.streams.add({
+                name: 'payment',
+                subjects: ['payment.*'],
+                storage: StorageType.Memory
+            });
+
             this._client = this._natsConn.jetstream();
         } catch (error) {
             console.error(`Error connecting: ${error}`);
