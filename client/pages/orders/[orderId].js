@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import StripeCheckout from "react-stripe-checkout";
 import useRequest from "../../hooks/useRequest";
 import { STRIPE_PUBLISHABLE_KEY } from "../../stripe/config";
+import Router from 'next/router'
 const REFRESH_INTERVAL = 1000;
 
 const OrderShow = ({ order, currentUser }) => {
@@ -12,7 +13,7 @@ const OrderShow = ({ order, currentUser }) => {
         body: {
             orderId: order.id
         },
-        onSuccess: (payment) => console.log(payment)
+        onSuccess: (payment) => Router.push('/orders')
     })
 
     useEffect(() => {
