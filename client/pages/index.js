@@ -14,6 +14,7 @@ const LandingPage = ({ currentUser, tickets }) => {
                         <span style={{ color: 'blue' }}>View</span>
                     </Link>
                 </td>
+                <td>{ticket.orderId ? 'Reserved' : ''}</td>
             </tr>
         )
     })
@@ -27,6 +28,7 @@ const LandingPage = ({ currentUser, tickets }) => {
                         <th>Title</th>
                         <th>Price</th>
                         <th>Link</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
